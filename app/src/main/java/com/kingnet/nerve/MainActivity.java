@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -57,11 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         ITracer frameTrace = new FrameTrace();
-
         IMonitor monitor = KYFpsMonitor.getMonitor();
-
-        monitor.onStart();//开始监控
-        frameTrace.startTrace();//开始采集
+        KYFpsMonitor.getMonitor().init();
+        monitor.startMonitor();//开始监控
+//        frameTrace.startTrace();//开始采集
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.kingnet.nerve.performance.monitor.KYFpsMonitor;
  */
 public class FrameTrace extends BaseTracer implements IFrameTracer{
     public FrameTrace() {
-        KYFpsMonitor.getMonitor().
     }
 
     @Override
