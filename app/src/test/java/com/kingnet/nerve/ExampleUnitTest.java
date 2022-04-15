@@ -4,6 +4,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.stream.Stream;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -12,6 +19,23 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+//        try {
+//            Process process = Runtime.getRuntime().exec("java -version");
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            Stream<String> lines = reader.lines();
+//
+//            Iterator<String> iterator = lines.iterator();
+//            while (iterator.hasNext()){
+//                System.out.println(iterator.next());
+//            }
+//            process.destroy();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        System.out.println("hello world!!!");
+    }
+    public static void main(String[] args) {
+        System.out.println("hello world!!!");
     }
 }
+

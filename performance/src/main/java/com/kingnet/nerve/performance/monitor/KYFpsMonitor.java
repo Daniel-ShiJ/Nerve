@@ -61,6 +61,18 @@ public class KYFpsMonitor implements Runnable, IMonitor {
             animationCallBackQueue = ReflectUtils.reflectMethod(callbackQueues[ANIMATION_CALLBACK], REFLECT_METHOD_NAME, long.class, Object.class, Object.class);
             traversalCallBackQueue = ReflectUtils.reflectMethod(callbackQueues[TRAVERSAL_CALLBACK], REFLECT_METHOD_NAME, long.class, Object.class, Object.class);
         }
+
+        LooperMonitor.getInstance().addObserver(new LooperMonitor.LooperMonitorListener() {
+            @Override
+            public void dispatchStart(String message) {
+                System.out.println("过来了 == " + message);
+            }
+
+            @Override
+            public void dispatchEnd() {
+                doFrameEnd();
+            }
+        });
     }
 
     @Override
@@ -102,7 +114,18 @@ public class KYFpsMonitor implements Runnable, IMonitor {
         mItemFrame[callBackType].setCost(System.nanoTime() - mItemFrame[callBackType].getCost());
     }
 
+    /**
+     * 帧开始
+     */
     private void doFrameBegin() {
+    }
+
+    /**
+     * 帧结束
+     */
+    private void doFrameEnd(){
+
+        addFrameCallBack(INPUT_CALLBACK,this,true);//再次添加callBack
     }
 
 

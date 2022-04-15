@@ -19,6 +19,7 @@ import com.kingnet.nerve.performance.Listener.ITracer;
 import com.kingnet.nerve.performance.monitor.FpsMonitor;
 import com.kingnet.nerve.performance.monitor.IMonitor.IMonitor;
 import com.kingnet.nerve.performance.monitor.KYFpsMonitor;
+import com.kingnet.nerve.performance.monitor.MemInfoMonitor;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,11 +58,16 @@ public class MainActivity extends AppCompatActivity {
 //        fpsMonitor.startMonitor(value -> System.out.println("fps == " + value));
 
 
-        ITracer frameTrace = new FrameTrace();
-        IMonitor monitor = KYFpsMonitor.getMonitor();
-        KYFpsMonitor.getMonitor().init();
-        monitor.startMonitor();//开始监控
+//        ITracer frameTrace = new FrameTrace();
+//        IMonitor monitor = KYFpsMonitor.getMonitor();
+//        KYFpsMonitor.getMonitor().init();
+//        monitor.startMonitor();//开始监控
+
+//        IMonitor memInfoMonitor = new MemInfoMonitor();
+//        memInfoMonitor.startMonitor();//开始监控
 //        frameTrace.startTrace();//开始采集
+
+        Nerve nerve = new Nerve.Builder().create(this);
     }
 
     @Override
