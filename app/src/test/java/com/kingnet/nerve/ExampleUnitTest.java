@@ -34,8 +34,17 @@ public class ExampleUnitTest {
 //        }
         System.out.println("hello world!!!");
     }
-    public static void main(String[] args) {
-        System.out.println("hello world!!!");
+
+    @Test
+    public void test(){
+        int my = my(2, 25);
+        System.out.println("value == " + my);
+    }
+
+    public int my(int a,int b){
+        if(b == 0) return 0;
+        if(b % 2 == 0) return my(a + a,b/2);
+        return my(a + a,b/2) + a;
     }
 }
 

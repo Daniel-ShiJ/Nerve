@@ -98,10 +98,6 @@ public class KYFpsMonitor implements Runnable, IMonitor {
                 doCallBackQueueBegin(TRAVERSAL_CALLBACK);
             }
         },true);
-
-        for (int i = 0; i < mItemFrame.length; i++) {
-            System.out.println("frameBean["+i+"]耗时 = "+mItemFrame[i].getCost());
-        }
     }
 
     private void doCallBackQueueBegin(int callBackType) {
@@ -124,6 +120,13 @@ public class KYFpsMonitor implements Runnable, IMonitor {
      * 帧结束
      */
     private void doFrameEnd(){
+        doCallBackQueueEnd(TRAVERSAL_CALLBACK);
+
+
+        for (int i = 0; i < mItemFrame.length; i++) {
+            System.out.println("frameBean["+i+"]耗时 = "+mItemFrame[i].getCost());
+        }
+
 
         addFrameCallBack(INPUT_CALLBACK,this,true);//再次添加callBack
     }

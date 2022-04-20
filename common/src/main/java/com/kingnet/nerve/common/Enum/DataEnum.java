@@ -5,7 +5,7 @@ package com.kingnet.nerve.common.Enum;
  * Date:2022/4/15 14:49
  * Description:
  */
-enum DataEnum {
+public enum DataEnum {
     MEMORY,
     FRAME,
     DNS,
