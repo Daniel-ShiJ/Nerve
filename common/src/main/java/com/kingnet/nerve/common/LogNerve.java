@@ -9,7 +9,9 @@ import android.util.Log;
  */
 public class LogNerve {
     private static final String TAG = "Nerve";
-    public static void e(String msg){
-        Log.e(TAG,msg);
+
+    public static void e(String msg) {
+        if (Config.getInstance().isDebug)
+            Log.e(TAG, msg);
     }
 }

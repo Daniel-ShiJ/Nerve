@@ -20,7 +20,7 @@ public class LooperMonitor implements MessageQueue.IdleHandler {
     private IdlePrintln mPrintln;
     private List listeners;
 
-    public LooperMonitor(Looper looper) {
+    private LooperMonitor(Looper looper) {
         this.mLooper = looper;
         mPrintln = new IdlePrintln();
         mLooper.setMessageLogging(mPrintln);

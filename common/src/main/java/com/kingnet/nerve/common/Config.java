@@ -48,7 +48,69 @@ public final class Config {
      */
     int ignoreThreshold;
 
+    boolean isDebug = true;
 
+    public void setDataType(byte mDataType) {
+        this.mDataType = mDataType;
+    }
 
+    /**
+     * 是否采集内存信息
+     * @return
+     */
+    public boolean isTraceMemInfo(){
+        return (mDataType & 0x0F) == 0x01;
+    }
 
+    /**
+     * 是否采集Frame数据
+     * @return
+     */
+    public boolean isTraceFRAME(){
+        return (mDataType & 0x0F) == 0x03;
+    }
+
+    /**
+     * 是否采集DNS数据
+     * @return
+     */
+    public boolean isTraceDNS(){
+        return (mDataType & 0x0F) == 0x05;
+    }
+
+    /**
+     * 是否采集网络数据
+     * @return
+     */
+    public boolean isTraceNetWork(){
+        return (mDataType & 0x0F) == 0x08;
+    }
+
+    /**
+     * 是否采集Java层 Crash数据
+     * @return
+     */
+    public boolean isTraceCrash(){
+        return (mDataType & 0xF0) == 0x10;
+    }
+
+    /**
+     * 是否采集Native层 Crash数据
+     * @return
+     */
+    public boolean isTraceNativeCrash(){
+        return (mDataType & 0xF0) == 0x20;
+    }
+
+    /**
+     * 是否采集Log数据
+     * @return
+     */
+    public boolean isTraceLog(){
+        return (mDataType & 0xF0) == 0x40;
+    }
+
+    public byte getDataType() {
+        return mDataType;
+    }
 }

@@ -114,6 +114,7 @@ public class KYFpsMonitor implements Runnable, IMonitor {
      * 帧开始
      */
     private void doFrameBegin() {
+
     }
 
     /**

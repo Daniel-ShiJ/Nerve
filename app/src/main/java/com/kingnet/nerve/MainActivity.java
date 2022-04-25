@@ -23,11 +23,15 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(500);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+                Nerve nerve = new Nerve.Builder().setUploadDataType(3).create(MainActivity.this);
+
+                nerve.startTrace();
             }
         });
 
@@ -45,6 +49,6 @@ public class MainActivity extends AppCompatActivity {
 //        memInfoMonitor.startMonitor();//开始监控
 //        frameTrace.startTrace();//开始采集
 
-        Nerve nerve = new Nerve.Builder().create(this);
+
     }
 }
