@@ -5,8 +5,8 @@ import android.content.Context;
 import com.kingnet.nerve.base.IAction;
 import com.kingnet.nerve.common.Config;
 import com.kingnet.nerve.common.LogNerve;
-import com.kingnet.nerve.common.network.INetWorkEngine;
-import com.kingnet.nerve.common.network.Listener.UploadDataListener;
+import com.kingnet.nerve.network.Uploader;
+import com.kingnet.nerve.network.base.BaseUploader;
 
 /**
  * Author:Daniel.ShiJ
@@ -15,21 +15,14 @@ import com.kingnet.nerve.common.network.Listener.UploadDataListener;
  */
 public final class Nerve implements IAction {
     private static volatile Nerve mNerve;
-    /**
-     * 上传回调
-     */
-    private UploadDataListener uploadDataListener;
-    /**
-     * 网络引擎
-     */
-    private INetWorkEngine netWorkEngine;
+
+    private BaseUploader mUploader;
     /**
      * 配置文件，从网络获取
      */
     private Config config;
     private Nerve(Builder builder){
-        this.uploadDataListener = builder.getUploadDataListener();
-        this.netWorkEngine = builder.getNetWorkEngine();
+        this.mUploader = builder.getUploader();
         this.config = builder.getConfig();
     }
 
@@ -58,17 +51,17 @@ public final class Nerve implements IAction {
     }
 
     public static class Builder{
-        private UploadDataListener uploadDataListener;
-        private INetWorkEngine netWorkEngine;
+        private BaseUploader mUploader;
         private Config config;
-        public Builder setUploadDataListener(UploadDataListener uploadDataListener) {
-            this.uploadDataListener = uploadDataListener;
+        public Builder setUploader(BaseUploader uploader) {
+            this.mUploader = uploader;
             return this;
         }
 
-        public Builder setNetWorkEngine(INetWorkEngine netWorkEngine) {
-            this.netWorkEngine = netWorkEngine;
-            return this;
+        public BaseUploader getUploader() {
+            if(mUploader == null)
+                mUploader = Uploader.getInstance();
+            return mUploader;
         }
 
         public Builder setUploadDataType(int dataType) {
@@ -85,19 +78,6 @@ public final class Nerve implements IAction {
                 throw new IllegalArgumentException("config not init!!!");
             return new Nerve(this);
         }
-
-        public UploadDataListener getUploadDataListener() {
-            if(uploadDataListener == null)
-                uploadDataListener = new DefaultUploadDataListener();
-            return uploadDataListener;
-        }
-
-        public INetWorkEngine getNetWorkEngine() {
-            if(null == netWorkEngine)
-                netWorkEngine = new DefaultNetWorkEngine();
-            return netWorkEngine;
-        }
-
         public Config getConfig() {
             return config;
         }
