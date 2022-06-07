@@ -1,9 +1,14 @@
 package com.kingnet.nerve.performance.monitor;
 
 import android.os.Debug;
-import android.util.DebugUtils;
 
+import com.kingnet.nerve.common.GsonUtils;
+import com.kingnet.nerve.common.LogNerve;
+import com.kingnet.nerve.performance.Listener.IMemInfoTracer;
 import com.kingnet.nerve.performance.monitor.IMonitor.IMonitor;
+
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Author:Daniel.ShiJ
@@ -31,18 +36,27 @@ import com.kingnet.nerve.performance.monitor.IMonitor.IMonitor;
  *
  * VSSVirtual Set Size虚拟内存VSS= RSS+ 未分配实际物理内存
  */
-public class MemInfoMonitor implements IMonitor {
+public class MemInfoMonitor implements IMonitor<IMemInfoTracer> {
+    private HashSet<IMemInfoTracer> hashSet = new HashSet();
     @Override
     public void startMonitor() {
         Debug.MemoryInfo memoryInfo = new Debug.MemoryInfo();
         Debug.getMemoryInfo(memoryInfo);
-        System.out.println("memoryInfo == " + memoryInfo.toString());
-
-
+        Map map = memoryInfo.getMemoryStats();
+        String memoryDetails = GsonUtils.getGson().toJson(memoryInfo);
+        map.put("details",memoryDetails);
+        LogNerve.e("memoryInfo == " + GsonUtils.getGson().toJson(map));
     }
 
     @Override
     public void stopMonitor() {
 
     }
+
+    @Override
+    public void addObserver(IMemInfoTracer iMemInfoTracer) {
+        hashSet.add(iMemInfoTracer);
+    }
+
+
 }

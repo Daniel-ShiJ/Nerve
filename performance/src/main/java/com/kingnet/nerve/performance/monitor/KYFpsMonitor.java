@@ -4,11 +4,16 @@ import android.os.SystemClock;
 import android.view.Choreographer;
 
 import com.kingnet.nerve.base.Utils.ReflectUtils;
+import com.kingnet.nerve.common.LogNerve;
+import com.kingnet.nerve.performance.Listener.IFrameTracer;
+import com.kingnet.nerve.performance.abs.BaseTracer;
 import com.kingnet.nerve.performance.monitor.IMonitor.IMonitor;
 import com.kingnet.nerve.performance.unity.FrameBean;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Author:Daniel.ShiJ
@@ -17,19 +22,13 @@ import java.lang.reflect.Method;
  * 参考 Tencent matrix 方案
  * idleHandler + Println + Choreographer反射
  */
-public class KYFpsMonitor implements Runnable, IMonitor {
+public class KYFpsMonitor implements Runnable, IMonitor<IFrameTracer> {
     private final static KYFpsMonitor sInstance = new KYFpsMonitor();
-
 
     private Method inputCallBackQueue;
     private Method animationCallBackQueue;
     private Method traversalCallBackQueue;
     private Choreographer mChoreographer;
-
-    /**
-     * 是否初始化
-     */
-    private boolean mInit;
 
     private static final String REFLECT_METHOD_NAME = "addCallbackLocked";
     private final int INPUT_CALLBACK = 0;
@@ -42,6 +41,17 @@ public class KYFpsMonitor implements Runnable, IMonitor {
     private final int DO_QUEUE_END = 2;
     private FrameBean[] mItemFrame = new FrameBean[TRAVERSAL_CALLBACK + 1];
 
+    private long dispatchStartNs;//开始时间
+
+    /**
+     * 是否初始化
+     */
+    private boolean isInit;
+    /**
+     * 监听者
+     */
+    private HashSet<IFrameTracer> observers = new HashSet<>();
+
     public static KYFpsMonitor getMonitor() {
         return sInstance;
     }
@@ -50,10 +60,11 @@ public class KYFpsMonitor implements Runnable, IMonitor {
         for (int i = 0; i < mItemFrame.length; i++) {
             mItemFrame[i] = new FrameBean();
         }
+        init();
     }
 
     public void init(){
-        mInit = true;
+        isInit = true;
         mChoreographer = Choreographer.getInstance();
         callbackQueues = ReflectUtils.reflectObject(mChoreographer, "mCallbackQueues", null);
         if(null != callbackQueues) {
@@ -65,20 +76,35 @@ public class KYFpsMonitor implements Runnable, IMonitor {
         LooperMonitor.getInstance().addObserver(new LooperMonitor.LooperMonitorListener() {
             @Override
             public void dispatchStart(String message) {
-                System.out.println("过来了 == " + message);
+                KYFpsMonitor.this.dispatchStart();
             }
 
             @Override
             public void dispatchEnd() {
-                doFrameEnd();
+                KYFpsMonitor.this.dispatchEnd();
             }
         });
     }
 
+    private void dispatchStart() {
+        dispatchStartNs = System.nanoTime();
+    }
+
+    private void dispatchEnd() {
+        doFrameEnd();
+        long startNs = dispatchStartNs;
+        long endNs = System.nanoTime();
+
+        for (IFrameTracer observer : observers) {
+            observer.writeFPS(startNs,endNs,mItemFrame[INPUT_CALLBACK].getCost(),mItemFrame[ANIMATION_CALLBACK].getCost(),mItemFrame[TRAVERSAL_CALLBACK].getCost());
+        }
+
+    }
+
+
     @Override
     public void run() {
-        System.out.println("我收到frame，回来了！！！");
-        long startTime =  System.nanoTime();//开始时间
+        doFrameBegin();
 
         //在Choreographer，执行doFrame函数时，会顺序执行三个type的doCallbacks、
         //所以，这里，每执行完一次，就添加callBack到下一个type的头部
@@ -114,20 +140,15 @@ public class KYFpsMonitor implements Runnable, IMonitor {
      * 帧开始
      */
     private void doFrameBegin() {
-
+        LogNerve.e("doFrameBegin");
     }
 
     /**
      * 帧结束
      */
     private void doFrameEnd(){
+        LogNerve.e("doFrameEnd");
         doCallBackQueueEnd(TRAVERSAL_CALLBACK);
-
-
-        for (int i = 0; i < mItemFrame.length; i++) {
-            System.out.println("frameBean["+i+"]耗时 = "+mItemFrame[i].getCost());
-        }
-
 
         addFrameCallBack(INPUT_CALLBACK,this,true);//再次添加callBack
     }
@@ -140,7 +161,7 @@ public class KYFpsMonitor implements Runnable, IMonitor {
 
     @Override
     public void stopMonitor() {
-
+        LooperMonitor.getInstance().cleanObserver();
     }
 
     private void addFrameCallBack(int type,Runnable callBack,boolean isAddHeader) {
@@ -166,7 +187,11 @@ public class KYFpsMonitor implements Runnable, IMonitor {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
     }
+
+    public void addObserver(IFrameTracer frameTracer){
+        observers.add(frameTracer);
+    }
+
 
 }

@@ -6,9 +6,9 @@
 
 1.Crash
 
-​	3.1 Crash_Java
+​	1.1 Crash_Java
 
-​	3.2 Crash_Native
+​	1.2 Crash_Native
 
 2.ANR
 
@@ -16,7 +16,11 @@
 
 4.Frame
 
+​	4.1 利用Choreographer+IdleHandler
+
 5.MemInfo
+
+​	5.1 利用Debug.MemoryInfo
 
 数据上传（单独进程，与数据采集做风险隔离）
 

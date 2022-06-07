@@ -1,5 +1,7 @@
 package com.kingnet.nerve.common;
 
+import com.kingnet.nerve.common.Enum.DataEnum;
+
 /**
  * Author:Daniel.ShiJ
  * Date:2022/4/15 15:30
@@ -41,7 +43,12 @@ public final class Config {
      * 阈值
      * 默认 5M
      */
-    int threshold = 1024 * 1024 * 5;
+    int threshold_memInfo = 1024 * 1024 * 5;
+    /**
+     * 内存心跳
+     * 默认 5分钟
+     */
+    int heartbeat_memInfo = 5 * 60 * 1000;
 
     /**
      * 忽略阈值
@@ -59,7 +66,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceMemInfo(){
-        return (mDataType & 0x0F) == 0x01;
+        return (mDataType & 0x0F) == DataEnum.MEMORY.value();
     }
 
     /**
@@ -67,7 +74,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceFRAME(){
-        return (mDataType & 0x0F) == 0x03;
+        return (mDataType & 0x0F) == DataEnum.FRAME.value();
     }
 
     /**
@@ -75,7 +82,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceDNS(){
-        return (mDataType & 0x0F) == 0x05;
+        return (mDataType & 0x0F) == DataEnum.DNS.value();
     }
 
     /**
@@ -83,7 +90,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceNetWork(){
-        return (mDataType & 0x0F) == 0x08;
+        return (mDataType & 0x0F) == DataEnum.NETWORK.value();
     }
 
     /**
@@ -91,7 +98,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceCrash(){
-        return (mDataType & 0xF0) == 0x10;
+        return (mDataType & 0xF0) == DataEnum.CRASH.value();
     }
 
     /**
@@ -99,7 +106,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceNativeCrash(){
-        return (mDataType & 0xF0) == 0x20;
+        return (mDataType & 0xF0) == DataEnum.NATIVE_CRASH.value();
     }
 
     /**
@@ -107,7 +114,7 @@ public final class Config {
      * @return
      */
     public boolean isTraceLog(){
-        return (mDataType & 0xF0) == 0x40;
+        return (mDataType & 0xF0) == DataEnum.LOG.value();
     }
 
     public byte getDataType() {

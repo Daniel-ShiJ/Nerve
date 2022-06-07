@@ -5,6 +5,7 @@ import com.kingnet.nerve.common.Enum.DataEnum;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Executor;
 
 /**
  * Author:Daniel.ShiJ
@@ -14,7 +15,7 @@ import java.io.OutputStream;
 public interface ICacheManager {
     String pathDir = "KY" + File.separator + "NerveCache" + File.separator;
 
-    public void saveData(DataEnum dataEnum, OutputStream stream);
+    void pushData(DataEnum dataEnum, byte[] bytes);
 
-    public InputStream popData(DataEnum dataEnum);
+    InputStream popData(DataEnum dataEnum);
 }

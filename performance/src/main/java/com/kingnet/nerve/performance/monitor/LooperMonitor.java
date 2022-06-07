@@ -2,7 +2,10 @@ package com.kingnet.nerve.performance.monitor;
 
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.text.TextUtils;
 import android.util.Printer;
+
+import com.kingnet.nerve.common.LogNerve;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +40,8 @@ public class LooperMonitor implements MessageQueue.IdleHandler {
 
     @Override
     public boolean queueIdle() {
-        System.out.println("我是 queueIdle ");
-        return false;
+        LogNerve.e("我是 queueIdle ");
+        return true;
     }
 
     public void addObserver(LooperMonitorListener listener){
@@ -47,8 +50,11 @@ public class LooperMonitor implements MessageQueue.IdleHandler {
         listeners.add(listener);
     }
 
-
-
+    public void cleanObserver(){
+//        if(null != listeners)
+//            listeners.clear();
+//        mLooper.setMessageLogging(null);
+    }
 
     interface LooperMonitorListener{
         void dispatchStart(String message);
@@ -57,15 +63,36 @@ public class LooperMonitor implements MessageQueue.IdleHandler {
 
 
     class IdlePrintln implements Printer{
+        boolean isHasChecked;
+        boolean isValid;
 
         @Override
-        public void println(String x) {
-            System.out.println("x == " + x);
-            for (int i = 0; i < listeners.size(); i++) {
-                LooperMonitorListener listener = (LooperMonitorListener) listeners.get(i);
+        public void println(String msg) {
 
-                listener.dispatchStart(x);
+            if(!isHasChecked){
+                isValid = (!TextUtils.isEmpty(msg) && (msg.charAt(0) == '<' || msg.charAt(0) == '>'));
+                isHasChecked = true;
             }
+
+            if(!isValid) {
+                LogNerve.e("无效的Printer信息:" + msg);
+                return;
+            }
+            dispatch(msg.charAt(0) == '<',msg);
         }
+    }
+
+
+    private void dispatch(boolean isBegin, String msg) {
+        for (int i = 0; i < listeners.size(); i++) {
+            LooperMonitorListener listener = (LooperMonitorListener) listeners.get(i);
+            if (isBegin) {
+                listener.dispatchStart(msg);
+            }else{
+                listener.dispatchEnd();
+            }
+
+        }
+
     }
 }

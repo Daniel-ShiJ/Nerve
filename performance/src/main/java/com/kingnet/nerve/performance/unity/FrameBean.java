@@ -10,6 +10,24 @@ public class FrameBean {
     private int status;
     private long cost;
 
+    public FrameBean(){
+
+    }
+
+    public FrameBean(String targetName, long cost) {
+        this.targetName = targetName;
+        this.cost = cost;
+    }
+
+
+    public FrameBean cleanAndReturn(){
+        targetName = "";
+        status = 0;
+        cost = 0;
+        return this;
+    }
+
+
     public String getTargetName() {
         return targetName;
     }

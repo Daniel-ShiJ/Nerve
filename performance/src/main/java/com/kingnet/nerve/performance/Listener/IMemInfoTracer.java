@@ -2,10 +2,9 @@ package com.kingnet.nerve.performance.Listener;
 
 /**
  * Author:Daniel.ShiJ
- * Date:2022/3/25 17:01
+ * Date:2022/6/7 17:01
  * Description:
  */
-public interface ITracer {
-    void startTrace();
-    void stopTrace();
+public interface IMemInfoTracer {
+    void writeMemInfo(String pss);
 }

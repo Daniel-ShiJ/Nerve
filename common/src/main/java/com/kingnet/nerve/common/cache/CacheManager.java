@@ -1,8 +1,9 @@
 package com.kingnet.nerve.common.cache;
 
-import android.util.Log;
+import android.content.Context;
 
-import com.kingnet.nerve.common.Config;
+import com.kingnet.nerve.base.BaseContext;
+import com.kingnet.nerve.base.Utils.FileUtils;
 import com.kingnet.nerve.common.Enum.DataEnum;
 import com.kingnet.nerve.common.LogNerve;
 
@@ -34,9 +35,11 @@ public class CacheManager implements ICacheManager{
     CacheManager(){}
 
     @Override
-    public void saveData(DataEnum dataEnum, OutputStream stream) {
-        File file = new File(pathDir + dataEnum.name(), System.currentTimeMillis() + ".txt");
+    public void pushData(DataEnum dataEnum, byte[] bytes) {
 
+        File file = new File(BaseContext.getCon().getExternalCacheDir() + File.separator + pathDir + dataEnum.name());
+        LogNerve.e(dataEnum.name() + "-> pushData,path = "+file.getAbsolutePath());
+        FileUtils.bytesToFile(bytes,file);
     }
 
     @Override

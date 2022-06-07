@@ -6,4 +6,5 @@ package com.kingnet.nerve.performance.Listener;
  * Description:
  */
 public interface IFrameTracer{
+    void writeFPS(long startNs, long endNs, long inputCost, long animationCost, long traversalCost);
 }

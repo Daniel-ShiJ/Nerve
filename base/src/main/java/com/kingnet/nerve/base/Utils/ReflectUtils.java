@@ -23,7 +23,7 @@ public class ReflectUtils {
         if(isHard){
             try {
                 Method getDeclaredMethod = Class.class.getDeclaredMethod("getDeclaredMethod",String.class,Class[].class);
-                Method method = (Method) getDeclaredMethod.invoke(instance,methodName,argTypes);
+                Method method = (Method) getDeclaredMethod.invoke(instance.getClass(),methodName,argTypes);
                 method.setAccessible(true);
                 return method;
             } catch (NoSuchMethodException e) {
@@ -58,8 +58,8 @@ public class ReflectUtils {
             return defaultValue;
         if(isHard){
             try {
-                Method getDeclaredMethod = Class.class.getDeclaredMethod("getDeclaredMethod",String.class);
-                Field field = (Field) getDeclaredMethod.invoke(instance.getClass(),name);
+                Method getDeclaredField = Class.class.getDeclaredMethod("getDeclaredField",String.class);
+                Field field = (Field) getDeclaredField.invoke(instance.getClass(),name);
                 field.setAccessible(true);
                 return (T) field.get(instance);
             } catch (NoSuchMethodException e) {
@@ -80,6 +80,6 @@ public class ReflectUtils {
                 e.printStackTrace();
             }
         }
-        return null;
+        return defaultValue;
     }
 }
