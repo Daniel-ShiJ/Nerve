@@ -33,15 +33,24 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nerve = new Nerve.Builder(MainActivity.this).setUploadDataType(Nerve.MEMORY).create();
+                nerve = new Nerve.Builder(MainActivity.this).setUploadDataType(Nerve.FRAME).create();
                 nerve.start();
 
             }
         });
 
         binding.stopFps.setOnClickListener(v -> {
+
+
+            Intent intent = new Intent(MainActivity.this,TestActivity.class);
+            startActivity(intent);
 //            nerve.stop();
-            checkPermission();
+//            checkPermission();
+//
+//            Thread thread = new Thread();
+//            thread.run();
+//
+//            thread.start();
         });
 
 

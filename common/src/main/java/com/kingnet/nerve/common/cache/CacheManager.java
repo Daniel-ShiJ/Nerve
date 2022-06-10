@@ -1,7 +1,5 @@
 package com.kingnet.nerve.common.cache;
 
-import android.content.Context;
-
 import com.kingnet.nerve.base.BaseContext;
 import com.kingnet.nerve.base.Utils.FileUtils;
 import com.kingnet.nerve.common.Enum.DataEnum;
@@ -9,7 +7,6 @@ import com.kingnet.nerve.common.LogNerve;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -36,7 +33,6 @@ public class CacheManager implements ICacheManager{
 
     @Override
     public void pushData(DataEnum dataEnum, byte[] bytes) {
-
         File file = new File(BaseContext.getCon().getExternalCacheDir() + File.separator + pathDir + dataEnum.name());
         LogNerve.e(dataEnum.name() + "-> pushData,path = "+file.getAbsolutePath());
         FileUtils.bytesToFile(bytes,file);
@@ -44,7 +40,9 @@ public class CacheManager implements ICacheManager{
 
     @Override
     public InputStream popData(DataEnum dataEnum) {
-        File file = new File(pathDir+dataEnum.name());
+        File file = new File(BaseContext.getCon().getExternalCacheDir() + File.separator + pathDir + dataEnum.name());
+
+        LogNerve.e(file.getAbsolutePath());
         if(file.isDirectory()){
             File[] files = file.listFiles();
             for (File file1 : files) {

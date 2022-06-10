@@ -1,9 +1,16 @@
 package com.kingnet.nerve;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 
 import androidx.annotation.IntDef;
 
+import com.kingnet.nerve.analyze.AnalyzeService;
+import com.kingnet.nerve.analyze.aidl.INotify;
 import com.kingnet.nerve.annotation.DataEnumDef;
 import com.kingnet.nerve.base.BaseContext;
 import com.kingnet.nerve.common.Config;
@@ -30,6 +37,9 @@ public final class Nerve{
     public static final int NATIVE_CRASH = 0x20;
     public static final int LOG = 0x40;
 
+
+    private INotify notify;
+
     /**
      * 配置文件，从网络获取
      */
@@ -41,6 +51,9 @@ public final class Nerve{
     }
 
     public static Context getContext(){
+        if(null == BaseContext.getCon()){
+            throw new RuntimeException("context much init!!!");
+        }
         return BaseContext.getCon();
     }
 
@@ -64,24 +77,50 @@ public final class Nerve{
             ITracer tracer = new MemInfoTrace();
             tracer.startTrace();
         }
+
+
+        //这里启动本地分析、裁剪和上传的服务
+        Intent intent = new Intent(BaseContext.getCon(), AnalyzeService.class);
+
+        getContext().bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                notify = INotify.Stub.asInterface(service);
+                LogNerve.e("onServiceConnected.....");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                LogNerve.e("onServiceDisconnected.....");
+            }
+        },Context.BIND_AUTO_CREATE);
+
     }
 
     /**
      * 停止采集
      */
     public void stop(){
-        LogNerve.e("Nerve stop ..........");
-        boolean isAll = (config.getDataType() == -1);//全停止
 
-        if(isAll || config.isTraceFRAME()){
-            //采集Frame信息
-            LogNerve.e("停止采集Frame信息.....");
+        try {
+            notify.move(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
-        if(isAll || config.isTraceMemInfo()){
-            //采集内存信息
-            LogNerve.e("停止采集内存信息.....");
-        }
+//
+//        LogNerve.e("Nerve stop ..........");
+//        boolean isAll = (config.getDataType() == -1);//全停止
+//
+//        if(isAll || config.isTraceFRAME()){
+//            //采集Frame信息
+//            LogNerve.e("停止采集Frame信息.....");
+//        }
+//
+//        if(isAll || config.isTraceMemInfo()){
+//            //采集内存信息
+//            LogNerve.e("停止采集内存信息.....");
+//        }
 
     }
 

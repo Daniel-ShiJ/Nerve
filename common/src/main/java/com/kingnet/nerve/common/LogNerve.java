@@ -14,4 +14,9 @@ public class LogNerve {
         if (Config.getInstance().isDebug)
             Log.e(TAG, msg);
     }
+
+    public static void e(String tag, String msg) {
+        if (Config.getInstance().isDebug)
+            Log.e(TAG + " " + tag, msg);
+    }
 }

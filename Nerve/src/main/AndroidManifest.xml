@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kingnet.nerve">
     <application>
-        <service android:name="com.kingnet.nerve.network.Uploader"
-            android:process="nerve.upload"/>
+        <service android:name="com.kingnet.nerve.analyze.AnalyzeService"
+            android:process="nerve.analyze"/>
     </application>
 </manifest>

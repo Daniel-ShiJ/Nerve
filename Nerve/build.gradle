@@ -37,5 +37,5 @@ dependencies {
 
     implementation(project(":performance"))
     implementation(project(":behavior"))
-    implementation(project(":network"))
+    implementation(project(":analyze"))
 }

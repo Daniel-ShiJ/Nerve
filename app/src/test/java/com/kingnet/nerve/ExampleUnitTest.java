@@ -19,20 +19,23 @@ import java.util.stream.Stream;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-//        try {
-//            Process process = Runtime.getRuntime().exec("java -version");
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-//            Stream<String> lines = reader.lines();
-//
-//            Iterator<String> iterator = lines.iterator();
-//            while (iterator.hasNext()){
-//                System.out.println(iterator.next());
-//            }
-//            process.destroy();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        System.out.println("hello world!!!");
+
+
+        String temp = "/Users/daniel.sj/Desktop/KY/workspace/DataSDK/app/build/outputs/apk/debug/app-debug.apk";
+        try {
+            Process process = Runtime.getRuntime().exec("aapt dump badging "+temp);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            Stream<String> lines = reader.lines();
+
+            Iterator<String> iterator = lines.iterator();
+            while (iterator.hasNext()){
+                System.out.println(iterator.next());
+            }
+            process.destroy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("结束 ！！！！");
     }
 
     @Test
