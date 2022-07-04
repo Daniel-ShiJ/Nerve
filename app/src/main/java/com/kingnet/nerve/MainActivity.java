@@ -8,11 +8,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
 import androidx.navigation.ui.AppBarConfiguration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.kingnet.nerve.annotation.DataEnumDef;
 import com.kingnet.nerve.databinding.ActivityMainBinding;
@@ -30,20 +34,17 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+
+        binding.stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nerve = new Nerve.Builder(MainActivity.this).setUploadDataType(Nerve.FRAME).create();
-                nerve.start();
-
             }
         });
 
-        binding.stopFps.setOnClickListener(v -> {
+        binding.upload.setOnClickListener(v -> {
 
-
-            Intent intent = new Intent(MainActivity.this,TestActivity.class);
-            startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this,TestActivity.class);
+//            startActivity(intent);
 //            nerve.stop();
 //            checkPermission();
 //

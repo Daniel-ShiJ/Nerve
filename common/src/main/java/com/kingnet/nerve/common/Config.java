@@ -41,14 +41,25 @@ public final class Config {
 
     /**
      * 阈值
-     * 默认 5M
+     * 默认 内存的80%
      */
-    int threshold_memInfo = 1024 * 1024 * 5;
+    float threshold_memInfo = 0.8f;
+
+    /**
+     * 内存最大阈值
+     */
+    float threshold_memInfo_max = 0.9f;
+
+    /**
+     * 内存连续上升次数
+     */
+    int memInfoAscendCount = 0;
+
     /**
      * 内存心跳
-     * 默认 5分钟
+     * 默认 5s
      */
-    int heartbeat_memInfo = 5 * 60 * 1000;
+    int heartbeat_memInfo = 5 * 1000;
 
     /**
      * 忽略阈值
@@ -119,5 +130,18 @@ public final class Config {
 
     public byte getDataType() {
         return mDataType;
+    }
+
+
+    public float getThresholdMemInfo() {
+        return threshold_memInfo;
+    }
+
+    public float getThresholdMemInfoMax() {
+        return threshold_memInfo_max;
+    }
+
+    public int getMemInfoAscendCount() {
+        return memInfoAscendCount;
     }
 }

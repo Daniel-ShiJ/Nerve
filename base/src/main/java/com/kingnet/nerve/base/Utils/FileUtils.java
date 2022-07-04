@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Author:Daniel.ShiJ
@@ -22,15 +21,8 @@ public class FileUtils {
         try {
             ByteArrayInputStream byteArrayInputStream =  new ByteArrayInputStream(bytes);
             bufferedInputStream = new BufferedInputStream(byteArrayInputStream);
-            if (null != file) {
-                if (!file.exists()) {
-                    boolean isSuccess = file.mkdirs();
-                    if (!isSuccess) {
-                        throw new IllegalArgumentException("创建" + file.getAbsolutePath() + "失败！！！");
-                    }
-                }
-            }
-            File sourceFile = new File(file, DateUtils.getNow() +".txt");
+
+            File sourceFile = checkAndCreateFile(file);
 
             if(sourceFile.exists()){//文件存在
                 fileOutputStream = new FileOutputStream(sourceFile,true);
@@ -62,4 +54,25 @@ public class FileUtils {
             }
         }
     }
+
+    public static File checkAndCreateFile(File dir){
+        if (null != dir) {
+            if (!dir.exists()) {
+                boolean isSuccess = dir.mkdirs();
+                if (!isSuccess) {
+                    throw new IllegalArgumentException("create " + dir.getAbsolutePath() + " fail！！！");
+                }
+            }
+        }
+        return new File(dir, DateUtils.getNow() +".txt");
+    }
+
+    public static void checkAndCreateDir(File dir){
+        if (null != dir) {
+            if(!dir.exists())
+                dir.mkdirs();
+        }
+    }
+
+
 }

@@ -19,6 +19,10 @@ public abstract class BaseTracer implements ITracer {
         cacheManager.pushData(dataEnum,bytes);
     }
 
+    public void saveData(DataEnum dataEnum, Throwable t){
+        CacheManager.getInstance().pushDataPw(dataEnum,t);
+    }
+
     @Override
     public void startTrace() {
         mMonitor.startMonitor();

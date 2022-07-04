@@ -5,6 +5,6 @@ package com.kingnet.nerve.performance.Listener;
  * Date:2022/3/25 17:01
  * Description:
  */
-public interface IFrameTracer{
+public interface IFrameTracer extends IBaseTracer {
     void writeFPS(long startNs, long endNs, long inputCost, long animationCost, long traversalCost);
 }

@@ -12,10 +12,11 @@ import java.util.concurrent.Executor;
  * Date:2022/4/20 17:02
  * Description:
  */
-public interface ICacheManager {
+public interface ICacheManager<T> {
     String pathDir = "KY" + File.separator + "NerveCache" + File.separator;
+    String pathAnalyzeDir = "KY" + File.separator + "Analyze" + File.separator;
 
-    void pushData(DataEnum dataEnum, byte[] bytes);
+    void pushData(DataEnum dataEnum,T t);
 
-    InputStream popData(DataEnum dataEnum);
+    boolean popData(DataEnum dataEnum);
 }

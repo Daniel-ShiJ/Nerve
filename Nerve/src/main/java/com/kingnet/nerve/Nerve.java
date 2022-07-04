@@ -7,18 +7,19 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import androidx.annotation.IntDef;
-
 import com.kingnet.nerve.analyze.AnalyzeService;
 import com.kingnet.nerve.analyze.aidl.INotify;
 import com.kingnet.nerve.annotation.DataEnumDef;
 import com.kingnet.nerve.base.BaseContext;
+import com.kingnet.nerve.base.Utils.ApplicationUtils;
 import com.kingnet.nerve.common.Config;
 import com.kingnet.nerve.common.Enum.DataEnum;
 import com.kingnet.nerve.common.LogNerve;
+import com.kingnet.nerve.common.cache.CacheManager;
 import com.kingnet.nerve.network.Uploader;
 import com.kingnet.nerve.network.base.BaseUploader;
 import com.kingnet.nerve.performance.Listener.ITracer;
+import com.kingnet.nerve.performance.Traces.CrashTrace;
 import com.kingnet.nerve.performance.Traces.FrameTrace;
 import com.kingnet.nerve.performance.Traces.MemInfoTrace;
 
@@ -36,8 +37,6 @@ public final class Nerve{
     public static final int CRASH = 0x10;
     public static final int NATIVE_CRASH = 0x20;
     public static final int LOG = 0x40;
-
-
     private INotify notify;
 
     /**
@@ -78,6 +77,14 @@ public final class Nerve{
             tracer.startTrace();
         }
 
+//        if(isAll || config.isTraceCrash()){
+            //采集crash信息
+            LogNerve.e("开始采集crash信息.....");
+            ITracer tracer = new CrashTrace();
+            tracer.startTrace();
+//        }
+
+        LogNerve.e("当前进程Nerve："+android.os.Process.myPid()+" >>");
 
         //这里启动本地分析、裁剪和上传的服务
         Intent intent = new Intent(BaseContext.getCon(), AnalyzeService.class);
@@ -87,14 +94,61 @@ public final class Nerve{
             public void onServiceConnected(ComponentName name, IBinder service) {
                 notify = INotify.Stub.asInterface(service);
                 LogNerve.e("onServiceConnected.....");
+                ApplicationUtils.addObserver(isForeground -> {
+                    if(isForeground){
+                        LogNerve.e("进入前台!!!!!");
+                        try {
+                            notify.move(false,DataEnum.MEMORY.value());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        LogNerve.e("进入后台!!!!!");
+
+                        //通知analyze 线程 操作文件
+                        try {
+                            boolean moveSuccess = notify.move(true, DataEnum.MEMORY.value());
+                            if(moveSuccess){
+                                boolean deleteSuccess = CacheManager.getInstance().deleteData(DataEnum.MEMORY);
+                                LogNerve.e("删除结果："+deleteSuccess);
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 LogNerve.e("onServiceDisconnected.....");
             }
-        },Context.BIND_AUTO_CREATE);
+        }, Context.BIND_AUTO_CREATE);
 
+
+//        ApplicationUtils.addObserver(isForeground -> {
+//            if(isForeground){
+//                LogNerve.e("进入前台!!!!!");
+//                try {
+//                    notify.move(false,DataEnum.MEMORY.value());
+//                } catch (RemoteException e) {
+//                    e.printStackTrace();
+//                }
+//            }else{
+//                LogNerve.e("进入后台!!!!!");
+//
+//                //通知analyze 线程 操作文件
+//                try {
+//                    boolean moveSuccess = notify.move(true, DataEnum.MEMORY.value());
+//                    if(moveSuccess){
+//                        boolean deleteSuccess = CacheManager.getInstance().deleteData(DataEnum.MEMORY);
+//                        LogNerve.e("删除结果："+deleteSuccess);
+//                    }
+//                } catch (RemoteException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     /**
@@ -103,7 +157,7 @@ public final class Nerve{
     public void stop(){
 
         try {
-            notify.move(true);
+            notify.move(false,0);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

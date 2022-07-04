@@ -5,6 +5,5 @@ package com.kingnet.nerve.performance.Listener;
  * Date:2022/6/7 17:01
  * Description:
  */
-public interface IMemInfoTracer {
-    void writeMemInfo(String pss);
+public interface IMemInfoTracer extends IBaseTracer {
 }
